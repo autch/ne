@@ -36,7 +36,7 @@
 #ifndef __ELE_GENERIC_H__
 #define __ELE_GENERIC_H__
 
-typedef	int	bool;
+#include <stdbool.h>
 
 #ifndef	FALSE
 #	define	FALSE	0
@@ -48,16 +48,6 @@ typedef	int	bool;
 #	define	min(x,y)	(x<y?x:y)
 #endif
 
-
-
-extern	void	*mem_alloc(size_t n);
-extern	void	*mem_realloc(void *p, size_t n);
-
-extern	void	*mem_alloca(size_t n);
-extern	void	mem_alloca_gc();
-
-extern	char	*mem_strdup(const char *s);
-extern	char	*mem_strdupa(const char *s);
 
 extern	void	reg_pf(const char *cp, char *s,bool f);
 extern	void	reg_path(const char *cp, char *s,bool f);

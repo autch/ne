@@ -5,6 +5,9 @@
     All rights reserved. 
 --------------------------------------------------------------------*/
 
+#ifndef disp_h
+#define disp_h
+
 typedef	struct dspfmt
 {
 	color_t 		col;
@@ -44,3 +47,9 @@ extern	int 	dsp_regexist(dspreg_t *drp);
 extern	void	dsp_regrm(dspreg_t *drp);
 extern	void	dsp_regresize(dspreg_t *drp,int sizex,int sizey);
 
+/* disp.c */
+void dsp_regview(dspreg_t *drp);
+void dsp_regadd(dspreg_t *drp);
+void dsp_regfin(dspreg_t *drp);
+
+#endif /* disp_h */

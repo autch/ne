@@ -38,23 +38,24 @@
 #include	<stdio.h>
 #include	<stdlib.h>
 #include	<string.h>
+#include	<unistd.h>
 #include	<sys/types.h>
 #include	<sys/stat.h>
 #include	<pwd.h>
 
-#if	HAVE_DIRENT_H
+#ifdef	HAVE_DIRENT_H
 #	include	<dirent.h>
 #	define	NAMLEN(dirent)	strlen((dirent)->d_name)
 #else
 #	define	dirent direct
 #	define	NAMLEN(dirent)	(dirent)->d_namlen
-#	if	HAVE_SYS_NDIR_H
+#	ifdef	HAVE_SYS_NDIR_H
 #		include	<sys/ndir.h>
 #	endif
-#	if	HAVE_SYS_DIR_H
+#	ifdef	HAVE_SYS_DIR_H
 #		include	<sys/dir.h>
 #	endif
-#	if	HAVE_NDIR_H
+#	ifdef	HAVE_NDIR_H
 #		include	<ndir.h>
 #	endif
 #endif
@@ -69,67 +70,6 @@
 
 
 #include	"generic.h"
-
-
-void	*mem_alloc(size_t n)
-{
-	void	*p;
-
-	p=malloc(n);
-	if (p==NULL)
-		error("malloc");
-	return p;
-}
-
-void	*mem_realloc(void *p, size_t n)
-{
-	p=realloc(p, n);
-	if (p==NULL)
-		error("realloc");
-	return p;
-}
-
-static	void	**p_alloca=NULL;
-static	int	 max_alloca=0, n_alloca=0;
-
-void	*mem_alloca(size_t n)
-{
-	if (n_alloca>=max_alloca)
-		{
-		 p_alloca=(void **)realloc(p_alloca, 64);
-		 max_alloca+=64;
-		}
-	return p_alloca[n_alloca++]=mem_alloc(n);
-}
-
-void	mem_alloca_gc()
-{
-	int 	i;
-
-	while(n_alloca>=0)
-		free(p_alloca[--n_alloca]);
-}
-
-
-char	*mem_strdup(const char *s)
-{
-	size_t	n;
-
-	n=strlen(s)+1;
-	return (char *)memcpy(mem_alloc(n), s, n);
-}
-
-char	*mem_strdupa(const char *s)
-{
-	size_t	n;
-
-	n=strlen(s)+1;
-	return (char *)memcpy(mem_alloca(n), s, n);
-}
-
-
-
-
 #define	LN_path	2048
 
 
@@ -274,7 +214,7 @@ void	reg_path(const char *cp, char *s,bool f)
 
 		 if (q==s)
 		 	{
-		 	 sprintf(path, "%s/%s", cp, s);
+		 	 snprintf(path, LN_path + 1, "%s/%s", cp, s);
 		 	 q=path;
 		 	} else
 		 	{
@@ -290,8 +230,7 @@ void	reg_path(const char *cp, char *s,bool f)
 		{
 		 if (*p!='\0')
 		 	{
-		 	 pt[pn]=(char *)mem_alloc(strlen(p)+1);
-		 	 strcpy(pt[pn],p);
+		 	 pt[pn]=(char *)strdup(p);
 		 	 ++pn;
 		 	}
 		 p=strsep(&sp,"/");
@@ -358,8 +297,8 @@ char	**dir_glob(const char *s, bool f_dotfile)
 	p_dir=opendir(s);
 	if (p_dir==NULL)
 		{
-		 p=mem_alloc(sizeof(char **)*2);
-		 p[0]=mem_strdup("..");
+		 p=malloc(sizeof(char **)*2);
+		 p[0]=strdup("..");
 		 p[1]=NULL;
 		 return p;
 		}
@@ -375,8 +314,8 @@ char	**dir_glob(const char *s, bool f_dotfile)
 		 	continue;
 
 		 if (n%N_dir==0)
-		 	p=(char **)mem_realloc(p, sizeof(char **)*(n+N_dir));
-		 p[n++]=mem_strdup(p_de->d_name);
+		 	p=(char **)realloc(p, sizeof(char **)*(n+N_dir));
+		 p[n++]=strdup(p_de->d_name);
 		}
 	closedir(p_dir);
 	p[n]=NULL;

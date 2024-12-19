@@ -52,6 +52,8 @@
 
 #include	"generic.h"
 #include	"term.h"
+#include	"../src/ed.h"
+#include 	"../src/setopt.h"
 
 #define	SENSEPERSEC	50
 #define	WAITKEYPAD	360		/* msec */
@@ -87,7 +89,7 @@ void	term_escset(int n, const char *e, const char *d)
 		return;
 
 	esc[esc_num].scode= n;
-	esc[esc_num].seq = mem_strdup(e);
+	esc[esc_num].seq = strdup(e);
 
 	switch (*e)
 		{

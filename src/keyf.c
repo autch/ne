@@ -6,30 +6,16 @@
 --------------------------------------------------------------------*/
 #include "ed.h"
 #include "sh.h"
-
+#include "term.h"
+#include "crt.h"
+#include "keyf.h"
+#include "iskanji.h"
+#include "cursor.h"
+#include <ctype.h>
 
 
 	/* KeyBoard Macro */
 
-#define	MAX_km	4096
-
-typedef	enum	{KM_none,KM_set,KM_do}	kmmode_t;
-
-typedef	struct	keylist
-{
-	int 			*buf;
-	size_t 			n;		/* size of buffer */
-	struct	keylist	*next;
-}	kmlist_t;
-
-typedef	struct
-{
-	kmmode_t	mode;
-	int 		buf[MAX_km];
-	int 		n,x;
-
-	kmlist_t	*list;
-}	keymacro_t;
 
 keymacro_t	km;
 
@@ -129,15 +115,15 @@ void	km_set(int region,keydef_t *def,int k1,int k2)
 		 	 return;
 		 	}
 		 free(list->buf);
-		 list->buf=mem_alloc(km.x*sizeof(int));
+		 list->buf=malloc(km.x*sizeof(int));
 		 list->n=km.x;
 		 memcpy(list->buf,km.buf,km.x*sizeof(int));
 		 system_msg("KeyMacro をセットしました。");
 		 return;
 		}
 
-	list=mem_alloc(sizeof(kmlist_t));
-	list->buf=mem_alloc(km.x*sizeof(int));
+	list=malloc(sizeof(kmlist_t));
+	list->buf=malloc(km.x*sizeof(int));
 	list->n=km.x;
 	memcpy(list->buf,km.buf,km.x*sizeof(int));
 	list->next=NULL;
@@ -213,7 +199,7 @@ keydef_t	*keydef_set(int r,kdm_t kdm,int n,int k1,int k2)
 
 	num=keydef_num(r);
 	if (num==-1|| num>=MAXKEYDEF)
-		return;
+		return NULL;
 
 	kdp= &keydef[r][num];
 

@@ -36,8 +36,10 @@
 
 #include	<stdio.h>
 #include	<string.h>
+#include	<stdlib.h>
 #include	"generic.h"
 #include	"hash.h"
+#include	"misc.h"
 
 
 	/* ¡ùhash */
@@ -45,9 +47,9 @@
 hash_t	*hash_init(hash_t *gvp,int m)
 {
 	if (gvp==NULL)
-		gvp= (hash_t *)mem_alloc(sizeof(hash_t));
+		gvp= (hash_t *)malloc(sizeof(hash_t));
 
-	gvp->item=(hash_item_t *)mem_alloc(sizeof(hash_item_t)* m);
+	gvp->item=(hash_item_t *)malloc(sizeof(hash_item_t)* m);
 	gvp->num=0;
 	gvp->max=m;
 
@@ -83,7 +85,7 @@ void	hash_set(hash_t *gvp, const char *ks,const char *vs)
 		 if (gvp->num>= gvp->max)
 		 	{
 		 	 gvp->max*=2;
-		 	 gvp->item=(hash_item_t *)mem_realloc(gvp->item, sizeof(hash_item_t)* gvp->max);
+		 	 gvp->item=(hash_item_t *)realloc(gvp->item, sizeof(hash_item_t)* gvp->max);
 		 	}
 		 strjncpy(gvp->item[gvp->num].key, ks, LN_key);
 		 p=gvp->item[gvp->num].val;
@@ -103,7 +105,7 @@ void	hash_defset(hash_t *gvp, const char *ks, const char *vs)
 	if (gvp->num>=gvp->max)
 		{
 		 gvp->max*=2;
-		 gvp->item=(hash_item_t *)mem_realloc(gvp->item, sizeof(hash_item_t)* gvp->max);
+		 gvp->item=(hash_item_t *)realloc(gvp->item, sizeof(hash_item_t)* gvp->max);
 		}
 
 	strjncpy(gvp->item[gvp->num].key, ks, LN_key);

@@ -9,6 +9,8 @@
     All rights reserved. 
 --------------------------------------------------------------------*/
 #include "ed.h"
+#include "list.h"
+#include "cursor.h"
 
 
 /*Base Pointer*/
@@ -32,7 +34,7 @@ void	lists_debug()
 	fprintf(stderr,"byte/size buffer\n");
 	while(ed!=NULL)
 		{
-		 fprintf(stderr,"%4d/%4d %p[%s]\n"
+		 fprintf(stderr,"%4ld/%4ld %p[%s]\n"
 		 	,ed->bytes,ed->size,ed->buffer,ed->buffer);
 		 ed=ed->next;
 		}
@@ -82,13 +84,13 @@ EditLine	*MakeLine(const char *buffer)
 	EditLine	*pli;
 	int	 		n;
 
-	pli=(EditLine *)mem_alloc(sizeof(EditLine));
+	pli=(EditLine *)malloc(sizeof(EditLine));
 
 	n=strlen(buffer);
 //	if (n<80)
 //		n=80;
 
-	pli->buffer=(char *)mem_alloc(sizeof(char)*(n+1));
+	pli->buffer=(char *)malloc(sizeof(char)*(n+1));
 	strcpy(pli->buffer, buffer);
 	pli->size=n;
 	pli->bytes=n;
@@ -104,7 +106,7 @@ void	Realloc(EditLine *li,const char *s)
 	n=strlen(s);
 	if (n>li->size)
 		{
-		 li->buffer =(char *)mem_realloc(li->buffer, n+1);
+		 li->buffer =(char *)realloc(li->buffer, n+1);
 		 li->size=n;
 		}
 
@@ -232,7 +234,7 @@ size_t	lists_size(long n_st,long n_en)
 	return a;
 }
 
-void	lists_proc(void func(),void *gp,long n_st,long n_en)
+void	lists_proc(lists_proc_func func,void *gp,long n_st,long n_en)
 {
 	long		i;
 	EditLine	*ed;
@@ -254,7 +256,7 @@ void	lists_proc(void func(),void *gp,long n_st,long n_en)
 		}
 }
 
-void	lists_add(void *func(),void *gp)
+void	lists_add(list_func func,void *gp)
 {
 	int 	n;
 	char	buf[MAXEDITLINE+1];

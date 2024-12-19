@@ -9,9 +9,12 @@
     All rights reserved. 
 --------------------------------------------------------------------*/
 #include	"ed.h"
+#include 	"profile.h"
+#include 	"ne.h"
 #include	<sys/types.h>
 #include	<sys/stat.h>
 #include	<signal.h>
+#include	<unistd.h>
 
 bool	failed=FALSE;
 

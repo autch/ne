@@ -6,6 +6,8 @@
 --------------------------------------------------------------------*/
 #include	"ed.h"
 #include	"sh.h"
+#include	"keyf.h"
+#include	"crt.h"
 #include	<ctype.h>
 #include	<stdarg.h>
 
@@ -55,7 +57,7 @@ void	menu_itemmake(menu_t *mnp,void func(int,mitem_t *,void *),size_t nums,void 
 
 	menu_itemfin(mnp);
 
-	mnp->mitem=mem_alloc(sizeof(mitem_t) * nums);
+	mnp->mitem=malloc(sizeof(mitem_t) * nums);
 
 	ln=0;
 	for (i=0;i<nums;++i)
@@ -105,14 +107,14 @@ void	makev_proc(int a, mitem_t *mip, void *vp)
 	va_list 	args;
 	char	*p;
 
-	args=*(va_list *)vp;
+	va_copy(args, vp);
 
 	p=va_arg(args, char *);
 	if (p==NULL)
 		strcpy(mip->str,"null"); else
 		strcpy(mip->str,p);
 
-	*(va_list *)vp=args;
+	va_end(args);
 }
 
 

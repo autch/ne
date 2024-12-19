@@ -5,12 +5,16 @@
     All rights reserved. 
 --------------------------------------------------------------------*/
 #include "ed.h"
+#include "iskanji.h"
+#include "crt.h"
 #include "sh.h"
+#include "keyf.h"
 #include <ctype.h>
 
+#include "lineedit.h"
 
 /* 新型lineedit処理系 */
-int 	le_getcsx(le_t *lep)	// local関数
+int 	le_getcsx(le_t *lep)
 {
 	int 	csx,i;
 
@@ -244,7 +248,7 @@ int 	legets_gets(const char *msg,char *s,int dsize,int size,int hn)
 	dspreg_t	*drp;
 	le_t	le;
 	uint 	ch;
-	int 	hy;
+	int 	hy = 0;
 	int 	ret;
 
 
@@ -349,7 +353,7 @@ legets_lep=&le;
 		  	 le_edit(&le, ch, NONE);
 		  	 continue;
 		  default:
-		  	 if (ch&KF_normalcode);
+		  	 if (ch&KF_normalcode)
 		  	 	{
 		  	 	 ch&= ~KF_normalcode;
 		  	 	 if (iseuc(ch) || ch==0x8e)

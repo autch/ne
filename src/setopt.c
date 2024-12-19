@@ -11,6 +11,8 @@
 
 #include "ed.h"
 #include "sh.h"
+#include "ne.h"
+#include "crt.h"
 #include <ctype.h>
 
 extern	keydef_t	keydef[MAX_region][MAXKEYDEF];
@@ -764,7 +766,7 @@ void	config_read(char *path)
 		 	  	 	 	 for (j=1;j<val_num;++j)
 		 	  	 	 	 	{
 		 	  	 	 	 	 kdp->args[j-1]= 
-		 	  	 	 	 	 	(char *)mem_alloc(strlen(val_buf[j])+1);
+		 	  	 	 	 	 	(char *)malloc(strlen(val_buf[j])+1);
 		 	  	 	 	 	 strcpy(kdp->args[j-1], val_buf[j]);
 		 	  	 	 	 	}
 		 	  	 	 	 kdp->args[j-1]=NULL;

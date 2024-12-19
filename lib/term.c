@@ -42,6 +42,7 @@
 #include	<stdio.h>
 #include	<stdlib.h>
 #include	<string.h>
+#include	<ctype.h>
 
 #ifdef  HAVE_UNISTD_H
 #   include <unistd.h>
@@ -264,7 +265,7 @@ char	*term_getent(const char *s_id, const char *s_def)
 	if (cp==NULL || *cp=='\0')
 		cp=s_def;
 
-	return mem_strdup(cp);
+	return strdup(cp);
 }
 
 #if 0
@@ -340,20 +341,20 @@ static	void	term_scr_init()
 {
 	int 	i;
 
-	term.scr = mem_alloc(term.sizey * sizeof (void *));
-	term.scr0= mem_alloc(term.sizey * sizeof (void *));
+	term.scr = malloc(term.sizey * sizeof (void *));
+	term.scr0= malloc(term.sizey * sizeof (void *));
 
 	for (i=0; i<term.sizey; ++i)
 		{
-		 term.scr[i] = mem_alloc(term.sizex * sizeof(int));
-		 term.scr0[i]= mem_alloc(term.sizex * sizeof(int));
+		 term.scr[i] = malloc(term.sizex * sizeof(int));
+		 term.scr0[i]= malloc(term.sizex * sizeof(int));
 
 		 term_scr_clr(term.scr[i], 0);
 		 term_scr_clr(term.scr0[i], 0);
 		}
 
 	term.f_cls=FALSE;
-	term.tq= mem_alloc(term.sizey * sizeof(int));
+	term.tq= malloc(term.sizey * sizeof(int));
 	term_queue_clear();
 }
 
@@ -665,7 +666,7 @@ void	term_ungetch(u_char c)
 #endif
 }
 
-int 	term_regetch(c)
+int 	term_regetch(int c)
 {
 #ifndef	TIOCSTI
 	if (ungetnum > 0) 

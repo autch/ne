@@ -5,9 +5,15 @@
     All rights reserved. 
 --------------------------------------------------------------------*/
 #include "ed.h"
+#include "file.h"
+#include "crt.h"
+#include "cursor.h"
+#include "list.h"
+#include "ne.h"
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <ctype.h>
 
 
 bool	safty_write(char *fn)
@@ -87,7 +93,7 @@ void	profile_write()
 		 	 	 	 perror("");
 		 	 	 	 break;
 		 	 	 	}
-		 	 	 sprintf(buf, "%s/XXXXXX",savedir);
+		 	 	 snprintf(buf, sizeof buf, "%s/XXXXXX",savedir);
 		 	 	 if (mktemp(buf)==NULL)
 		 	 	 	continue;
 

@@ -10,17 +10,36 @@
 --------------------------------------------------------------------*/
 #define	VAL_impl
 
+#include <ctype.h>
 #include "ed.h"
 #include "sh.h"
-#include <ctype.h>
+#include "cursor.h"
+#include "../lib/misc.h"
+#include "../lib/term.h"
+#include "crt.h"
+#include "keyf.h"
+#include "list.h"
+#include "file.h"
+#include "block.h"
+#include "profile.h"
+#include "input.h"
+#include "setopt.h"
+#include <unistd.h>
+#include <sys/wait.h>
+#include <sys/stat.h>
 
 #include	<errno.h>
+#include	<fcntl.h>
 #include	<sys/types.h>
 
 #ifdef	HAVE_SYS_UTSNAME_H
 #	include	<sys/utsname.h>
 #endif
 
+#include "ne.h"
+
+// hearderr.c
+void SetSignal(void);
 
 static	void	opening()
 {
@@ -191,7 +210,7 @@ bool	ne_arg(int argc,char *argv[])
 	sysinfo_optset();
 
 	if (sysinfo.f_report)
-		return;
+		return FALSE;
 
 	if (pf)
 		return profile_read();

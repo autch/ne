@@ -9,6 +9,15 @@
     All rights reserved. 
 --------------------------------------------------------------------*/
 #include "ed.h"
+#include "crt.h"
+#include "term.h"
+#include "block.h"
+#include "disp.h"
+#include "list.h"
+#include "lineedit.h"
+#include "cursor.h"
+#include "iskanji.h"
+#include "../lib/misc.h"
 #include <ctype.h>
 
 
@@ -44,20 +53,12 @@ void	crt_crmark()
 
 
 
-typedef	struct
-{
-	int 	dline;	// 画面上のライン
-	long	line;	// バッファの row
-
-	block_t	bm;
-}	crt_draw_t;
-
 void	crt_draw_proc(const char *s, crt_draw_t *gp)
 {
 	char	buf[MAXEDITLINE+1];
 	char	buf_dsp[MAXEDITLINE+1], *p;
 	bool	cf, bf;
-	int 	ln,sx,n,m;
+	int 	ln,sx = 0,n,m;
 	int 	x_st, x_ed;
 
 
@@ -299,14 +300,14 @@ dspfmt_t	*dspreg_guide(void *vp,int a,int sizex,int sizey)
 
 	if (*sysinfo.doublekey!='\0')
 		strcpy(tmp2,sysinfo.doublekey); else
-		sprintf(tmp2,"%04x",cn);
+		snprintf(tmp2, sizeof tmp2, "%04x",cn);
 
 	p = edbuf[CurrentFileNo].path;
 	length = strlen(p);
 	if (sizex-LN_guide < length)
 		p += length-(sizex-LN_guide);
 
-	sprintf(tmp, " %05d/%3d%%:%03d[%4.4s]%6d %2d%c%c%c%s"
+	snprintf(tmp, sizeof tmp, " %05ld/%3ld%%:%03d[%4.4s]%6ld %2d%c%c%c%s"
 			,GetLineOffset()
 			,GetLineOffset()== 1 || GetLastNumber( ) == 0 ? 0 : GetLineOffset()*100/GetLastNumber()
 			,le_getcsx(&csrle)

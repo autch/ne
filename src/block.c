@@ -9,6 +9,9 @@
     All rights reserved. 
 --------------------------------------------------------------------*/
 #include "ed.h"
+#include "cursor.h"
+#include "list.h"
+#include "file.h"
 
 #define	blck	edbuf[CurrentFileNo].block
 
@@ -153,7 +156,7 @@ bool	bstack_copy()
 		 bstack_fin();
 		}
 
-	bstack[bstack_nums].s= p= (char *)mem_alloc(block_size(&bkm)+1);
+	bstack[bstack_nums].s= p= (char *)malloc(block_size(&bkm)+1);
 	bstack[bstack_nums].blkm= bkm.blkm;
 	++bstack_nums;
 

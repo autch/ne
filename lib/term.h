@@ -114,6 +114,29 @@ extern	int 	term_inkey();
 extern	int 	keysdef_getcode(const char *s, int k[], int num);
 extern	void	keys_set(const char *k, const char *e, const char *d);
 
+extern int 	term_sizex();
+extern int 	term_sizey();
 
+
+/* ../lib/term.c */
+FILE *tty_fp(void);
+void term_getwsize(void);
+void term_queue_clear(void);
+void term_report(void);
+void term_csr_flush(void);
+void term_ungetch(u_char c);
+int term_regetch(int c);
+
+/* ../lib/term_inkey.c */
+void term_keyreport(void);
+void term_escset(int n, const char *e, const char *d);
+void key_ring_pushall(long n);
+int key_ring_pop(void);
+void key_ring_push(int ch);
+int term_inkey(void);
+int keysdef_getcode(const char *s, int k[], int num);
+void keys_set(const char *k, const char *e, const char *d);
+int term_escdefault_cmp(const void *v, const void *w);
+void term_escdefault(void);
 
 #endif	/* __TERM_H_ */

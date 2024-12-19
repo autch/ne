@@ -8,7 +8,15 @@
     Copyright (c) 1998,1999,2000 SASAKI Shunsuke.
     All rights reserved. 
 --------------------------------------------------------------------*/
+#include <stdbool.h>
+#include "line.h"
+#include "crt.h"
+#include "file.h"
+#include "iskanji.h"
 #include "ed.h"
+#include "cursor.h"
+#include "input.h"
+#include "block.h"
 #include <ctype.h>
 
 

@@ -2,12 +2,14 @@
 
 #include	<stdio.h>
 #include	<string.h>
+#include	<ctype.h>
 
 
 #	include	<termcap.h>
 #include	"ed.h"
 #include	"sh.h"
 #include	"../lib/term.h"
+#include	"../lib/misc.h"
 
 
 
@@ -72,7 +74,7 @@ void	keyf_setarg(keydef_t *kdp, const char *s)
 
 		 *p='\0';
 //fprintf(stderr, "  \'%s\'\n" ,buf);
-		 kdp->args[n]= (char *)mem_alloc(strlen(buf)+1);
+		 kdp->args[n]= (char *)malloc(strlen(buf)+1);
 		 strcpy(kdp->args[n], buf);
 		 ++n;
 

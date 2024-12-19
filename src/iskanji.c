@@ -9,7 +9,9 @@
     All rights reserved. 
 --------------------------------------------------------------------*/
 #include "ed.h"
-
+#include "iskanji.h"
+#include "cursor.h"
+#include <ctype.h>
 
 bool	iscnt(unsigned char c)
 {
@@ -392,7 +394,7 @@ int 	file_knjchk(FILE *fp)
 
 int 	file_gets(char *s, size_t bytes, FILE *fp, int *n_cr, int *n_lf)
 {
-	int 	c;
+	int 	c = EOF;
 	bool	f_cr;
 
 	f_cr=FALSE;

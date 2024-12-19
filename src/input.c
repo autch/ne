@@ -9,6 +9,12 @@
     All rights reserved. 
 --------------------------------------------------------------------*/
 #include 	"ed.h"
+#include 	"cursor.h"
+#include 	"crt.h"
+#include 	"disp.h"
+#include 	"lineedit.h"
+#include 	"iskanji.h"
+#include 	"input.h"
 
 
 void	LeditInput(int c,int contrl_flag)

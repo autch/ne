@@ -5,6 +5,10 @@
     All rights reserved. 
 --------------------------------------------------------------------*/
 #include	"ed.h"
+#include	"cursor.h"
+#include	"crt.h"
+#include	"iskanji.h"
+#include	"input.h"
 #include	"../lib/regexp.h"
 #include	<ctype.h>
 

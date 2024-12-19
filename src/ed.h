@@ -8,6 +8,9 @@
     Copyright (c) 1998,1999,2000
         SASAKI Shunsuke <ele@pop17.odn.ne.jp> All rights reserved. 
 --------------------------------------------------------------------*/
+#ifndef ed_h
+#define ed_h
+
 #include	"config.h"
 
 #include	<stdio.h>
@@ -228,9 +231,7 @@ extern	void	DeleteList(EditLine *li);
 extern	EditLine	*GetList(long o_number);
 extern	long	GetTopNumber();
 extern	long	GetLastNumber();
-extern	void	lists_proc(void func(),void *gp,long n_st,long n_en);
 extern	size_t	lists_size(long n_st,long n_en);
-extern	void	lists_add(void *func(),void *gp);
 
 extern	void	inkey_wait(const char *buffer);
 extern	int 	keysel(const char *s,const char *t);
@@ -353,3 +354,4 @@ extern	int 	lm_line(int n);
 extern	void	keyf_set(int region,const char *k,const char *s);
 extern	int 	keyf_getname(const char *s,int n);
 
+#endif /* ed_h */

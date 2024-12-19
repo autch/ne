@@ -9,6 +9,13 @@
     All rights reserved. 
 --------------------------------------------------------------------*/
 #include "ed.h"
+#include "cursor.h"
+#include "crt.h"
+#include "block.h"
+#include "file.h"
+#include "iskanji.h"
+#include "function.h"
+#include "search.h"
 #include <ctype.h>
 
 

@@ -6,12 +6,20 @@
 --------------------------------------------------------------------*/
 #include	"sh.h"
 #include	"filer.h"
+#include	"keyf.h"
+#include	"crt.h"
+#include	"input.h"
+#include	"file.h"
+#include	"../lib/misc.h"
+#include	"ne.h"
+#include	<ctype.h>
+#include	<unistd.h>
 
-#if	TIME_WITH_SYS_TIME
+#ifdef	TIME_WITH_SYS_TIME
 #	include	<sys/time.h>
 #	include	<time.h>
 #else
-#	if HAVE_SYS_TIME_H
+#	ifdef HAVE_SYS_TIME_H
 #		include	<sys/time.h>
 #	else
 #		include	<time.h>
@@ -87,6 +95,8 @@ typedef struct	fop
 
 
 
+fw_t	fw[2];
+eff_t	eff;
 
 
 
@@ -197,7 +207,7 @@ void	fw_init(fw_t *fwp, const char *s,int a)
 		strcpy(fwp->path, s); else
 		{
 		 getcwd(path, LN_path);
-		 sprintf(fwp->path, "%s/", path);
+		 snprintf(fwp->path, sizeof fwp->path, "%s/", path);
 		}
 
 	fwp->flist.fitem=NULL;
@@ -336,7 +346,7 @@ fitem_t	*fitem_mk(const char *path, char *s)
 	char	buf[LN_path+1], *p;
 	fitem_t	*fitem;
 
-	fitem=(fitem_t *)mem_alloc(sizeof(fitem_t));
+	fitem=(fitem_t *)malloc(sizeof(fitem_t));
 	fitem->next=NULL;
 
 	fitem->fn=s;
@@ -465,7 +475,7 @@ fitem_t	**findex_get(flist_t *flp)
 	fitem_t	*fitem;
 	int 	i;
 
-	findex=(fitem_t **)mem_alloc(flp->n* sizeof(int *));
+	findex=(fitem_t **)malloc(flp->n* sizeof(int *));
 
 	fitem=flp->fitem;
 	for (i=0;i<flp->n;++i)
@@ -539,7 +549,8 @@ static	void	fw_item_proc(int a,mitem_t *mip,void *vp)
 		}
 
 	strftime(buf,15,"%y/%m/%d %R", localtime(&fwp->findex[a]->stat.st_mtime));
-	sprintf(s+strlen(s), " %s",buf);
+	strcat(s," ");
+	strcat(s, buf);
 }
 
 void	fw_make(fw_t *fwp)
@@ -561,7 +572,7 @@ void	fw_make(fw_t *fwp)
 
 	fwp->marknum=0;
 	fwp->markmax=0;
-	fwp->mark=mem_alloc(sizeof(int)*fwp->flist.n);
+	fwp->mark=malloc(sizeof(int)*fwp->flist.n);
 	memset(fwp->mark,0,sizeof(int)*fwp->flist.n);
 
 	fwp->menu.sy=0;
@@ -976,10 +987,10 @@ static	int		cp_proc_file(const char *src,struct stat *srcstp
 		 	}
 		}
 
-	fclose(fpr);
+	int fc_err = fclose(fpr);
 	fclose(fpw);
 
-	if (ef || ferror(fpr))
+	if (ef || fc_err != 0)
 		{
 		 unlink(dst);
 		 return FR_err;

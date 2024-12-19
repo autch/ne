@@ -5,19 +5,20 @@
     All rights reserved. 
 --------------------------------------------------------------------*/
 #include	"ed.h"
+#include	"crt.h"
 
 
 dspfmt_t	*dsp_fmtinit(const char *s, dspfmt_t *dfp)
 {
 	dspfmt_t *dfpb;
 
-	dfpb=mem_alloc(sizeof(dspfmt_t));
+	dfpb=malloc(sizeof(dspfmt_t));
 
 	if (dfp!=NULL)
 		dfp->next=dfpb;
 
 	dfpb->col=AC_normal;
-	dfpb->str=mem_alloc(strlen(s)+1);
+	dfpb->str=malloc(strlen(s)+1);
 	strcpy(dfpb->str, s);
 	dfpb->next=NULL;
 
@@ -136,7 +137,7 @@ dspreg_t	*dsp_reginit()
 {
 	dspreg_t	*drp;
 
-	drp=(dspreg_t *)mem_alloc(sizeof(dspreg_t));
+	drp=(dspreg_t *)malloc(sizeof(dspreg_t));
 	drp->x=0;
 	drp->y=0;
 	drp->sizex=dspall.sizex;

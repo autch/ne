@@ -9,8 +9,20 @@
     All rights reserved. 
 --------------------------------------------------------------------*/
 #include	"ed.h"
+#include	"cursor.h"
+#include	"block.h"
+#include	"crt.h"
+#include	"file.h"
+#include	"filer.h"
+#include	"list.h"
+#include	"input.h"
+#include	"profile.h"
+#include	"ne.h"
+#include	"../lib/misc.h"
+#include	<unistd.h>
 #include	<sys/stat.h>
 #include	<sys/file.h>
+#include	"function.h"
 
 
 void	FileStartInit(bool f) // !! list clear flag 
@@ -117,7 +129,7 @@ bool	edbuf_rm_func(FILE *fp, const char *fn)
 		 	continue;
 
 		 n+=strlen(buf)+1;
-		 q=(char *)mem_alloc(n+1);
+		 q=(char *)malloc(n+1);
 		 if (p==NULL)
 		 	sprintf(q, "%s\n",buf); else
 		 	sprintf(q, "%s%s\n", p, buf);
@@ -217,7 +229,7 @@ bool	edbuf_mv(int n, const char *fn)
 bool	CheckFileAccess(const char *fn)
 {
 	struct stat	sbuf;
-	bool	f;
+	int	f;
 
 	if (fn!=NULL && strcmp(fn, edbuf[CurrentFileNo].path)!=0)
 		return FALSE;
@@ -410,7 +422,7 @@ int 	filesave(char *filename,bool f)
 void	*file_open_proc(char *s,kinfo_t *kip)
 {
 	char	buf[MAXEDITLINE+1];
-	bool	f;
+	int	f;
 
 	f=file_gets(buf, MAXEDITLINE, kip->fp, &kip->n_cr, &kip->n_lf);
 	kanji_toeuc(s, MAXEDITLINE, buf, kip->kc==KC_sjis, &kip->jm);
@@ -607,7 +619,7 @@ bool	FileOpenOp(const char *path)
 	2000/03/11 by Mia	upd
 		hack up filer support.
 */
-SHELL	bool	op_file_open()				/* ^[O */
+bool _op_file_open()
 {
 	char	fname[LN_path+1];
 
@@ -629,13 +641,18 @@ SHELL	bool	op_file_open()				/* ^[O */
 	return FileOpenOp(fname);
 }
 
-SHELL	bool	op_file_insert()				/* ^[I */
+SHELL	void	op_file_open()				/* ^[O */
+{
+	(void)_op_file_open();
+}
+
+SHELL	void	op_file_insert()				/* ^[I */
 {
 	char	fname[MAXEDITLINE+1];
 
 	*fname='\0';
 	if (HisGets(fname, INS_MSG, FOPEN_SYSTEM)==NULL)
-		return FALSE;
+		return;
 
 	fname[LN_path] = '\0';
 	if (need_filer( fname ))
@@ -644,13 +661,13 @@ SHELL	bool	op_file_insert()				/* ^[I */
 	if (*fname=='\0')
 		{
 		 CrtDrawAll();
-		 return FALSE;
+		 return;
 		}
 
 //	system_msg(WAITING_MSG);
 	file_insert(fname);
 	SetFileChangeFlag();
-	return TRUE;
+	return;
 }
 
 
@@ -711,7 +728,7 @@ bool	fileclose(int n)
 	return TRUE;
 }
 
-SHELL	bool	op_file_close()					/* ^[C */
+bool _op_file_close()
 {
 	int 	n;
 
@@ -725,6 +742,12 @@ SHELL	bool	op_file_close()					/* ^[C */
 		 	ne_fin();
 		}
 	BackFileNo = FindOutNextFile(CurrentFileNo);
+	return TRUE;
+}
+
+SHELL	void	op_file_close()					/* ^[C */
+{
+	(void)_op_file_close();
 }
 
 SHELL	void	op_file_aclose()
@@ -765,7 +788,7 @@ void 	op_file_undo()	/*  ‘Ω∏undo */
 {
 	 long lineOffset;
 	char	pf[LN_path+1];
-	bool	res;
+	int	res;
 
 	csr_leupdate();
 
@@ -830,7 +853,7 @@ void	op_menu_file()
 			op_file_undo();
 			break;
 		case 8:
-			op_misc_exec("");
+			op_misc_exec();
 			break;
 		/*	exec and get stdout/stderr */
 		case 9 :
@@ -848,14 +871,14 @@ SHELL	void	op_file_copen()
 	int 	n,m;
 
 	n=CurrentFileNo;
-	if (!op_file_open())
+	if (!_op_file_open())
 		return;
 
 	m=CurrentFileNo;
 	CurrentFileNo=n;
 	CrtDrawAll();
 
-	if (op_file_close() &&CurrentFileNo!=m)
+	if (_op_file_close() &&CurrentFileNo!=m)
 		{
 		 CurrentFileNo=m;
 		 CrtDrawAll();
